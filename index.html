@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Session Gameplan</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+  :root {
+    --ground: #f3efe6;
+    --panel: #fbf9f4;
+    --line: #d9d2c3;
+    --ink: #1c1a16;
+    --muted: #6b655a;
+    --bronze: #a8631f;
+    --bronze-soft: #e9d6bd;
+    --good: #1e8f7c;
+    --bad: #c8463f;
+    --good-soft: #d6ede6;
+    --bad-soft: #f4d9d6;
+    --price: #2f5d9c;
+    --focus: #2f5d9c;
+    --font-display: "Barlow Semi Condensed", "Arial Narrow", sans-serif;
+    --font-body: "Source Sans 3", "Segoe UI", sans-serif;
+    --font-mono: "IBM Plex Mono", "Consolas", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0f1216; --panel: #171b21; --line: #2a303a; --ink: #e8e6e0; --muted: #8c94a2;
+      --bronze: #d59650; --bronze-soft: #3a2c1c; --good: #35b79e; --bad: #ef6b63;
+      --good-soft: #163a34; --bad-soft: #43231f; --price: #7fb0f0; --focus: #7fb0f0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0f1216; --panel: #171b21; --line: #2a303a; --ink: #e8e6e0; --muted: #8c94a2;
+    --bronze: #d59650; --bronze-soft: #3a2c1c; --good: #35b79e; --bad: #ef6b63;
+    --good-soft: #163a34; --bad-soft: #43231f; --price: #7fb0f0; --focus: #7fb0f0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.45; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 20px 16px 60px; }
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: 30px; letter-spacing: 0.01em; margin: 0; text-wrap: balance; }
+  .eyebrow { font-family: var(--font-display); font-weight: 600; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); }
+  textarea { width: 100%; min-height: 150px; padding: 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font-family: var(--font-mono); font-size: 13px; line-height: 1.4; resize: vertical; }
+  textarea:focus, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  button { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: 0.04em; text-transform: uppercase; padding: 10px 18px; border-radius: 6px; border: 1px solid var(--bronze); background: var(--bronze); color: #fff; cursor: pointer; }
+  button.quiet { background: transparent; color: var(--bronze); }
+  .hint { color: var(--muted); font-size: 14px; }
+  .status { color: var(--muted); font-size: 14px; margin-left: auto; }
+  section { margin-top: 26px; }
+  h2 { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); margin: 0 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  .read { font-size: 17px; max-width: 65ch; }
+  .read p { margin: 0 0 8px; }
+  .regime { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-bottom: 12px; }
+  .chip { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+  .chip .k { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .chip .v { font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.2; margin-top: 2px; }
+  .chip.good .v { color: var(--good); } .chip.bad .v { color: var(--bad); } .chip.bronze .v { color: var(--bronze); }
+  .ladder { font-family: var(--font-mono); font-size: 13.5px; overflow-x: auto; }
+  .ladder table { border-collapse: collapse; width: 100%; min-width: 520px; font-variant-numeric: tabular-nums; }
+  .ladder td { padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .ladder td.px { white-space: nowrap; width: 150px; }
+  .ladder td.stars { white-space: nowrap; width: 60px; color: var(--bronze); letter-spacing: 0.05em; }
+  .ladder td.role { color: var(--muted); white-space: nowrap; width: 110px; }
+  .ladder tr.a td { background: var(--bronze-soft); }
+  .ladder tr.price td { background: var(--panel); color: var(--price); font-weight: 500; border-top: 2px solid var(--price); border-bottom: 2px solid var(--price); }
+  .ladder tr.head td { color: var(--muted); font-family: var(--font-display); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: none; padding-top: 10px; }
+  .play { display: grid; gap: 10px; }
+  .scn { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; border-left: 4px solid var(--bronze); }
+  .scn.long { border-left-color: var(--good); } .scn.short { border-left-color: var(--bad); }
+  .scn .t { font-family: var(--font-display); font-weight: 600; font-size: 17px; margin-bottom: 4px; }
+  .scn p { margin: 4px 0; font-size: 15px; }
+  .scn .tag { display: inline-block; font-family: var(--font-display); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; background: var(--bronze-soft); color: var(--bronze); margin-left: 6px; vertical-align: middle; }
+  ul { margin: 6px 0 0; padding-left: 20px; }
+  li { margin: 4px 0; }
+  .one { font-size: 17px; font-weight: 600; margin-top: 12px; padding: 10px 12px; border-left: 4px solid var(--bronze); background: var(--panel); }
+  .mono { font-family: var(--font-mono); }
+  .sample { font-size: 13px; color: var(--muted); }
+  @media (prefers-reduced-motion: no-preference) { button { transition: filter 0.15s; } button:hover { filter: brightness(1.08); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">MNQ / NQ · Asia · London · New York</div>
+      <h1>Session Gameplan</h1>
+    </div>
+    <div class="hint">The two TradingView alerts feed this page by themselves, every half hour and at each session start. Paste sheets by hand to build a plan from other levels. Nothing is invented: every line is built from the prices in the sheets.</div>
+  </header>
+
+  <textarea id="in" spellcheck="false" aria-label="Level sheets"></textarea>
+  <div class="row">
+    <button id="build">Build gameplan</button>
+    <button id="fetch" class="quiet">Refresh feed</button>
+    <button id="copy" class="quiet">Copy plan as text</button>
+    <button id="sample" class="quiet">Load example</button>
+    <span class="status" id="status"></span>
+  </div>
+
+  <div id="out"></div>
+</div>
+
+<script>
+(function () {
+  const SAMPLE = `#SD MNQ1! 2026-09-11 21:40 ET px 29085.25
+KEY|PWH|29310.00
+KEY|PMH|29288.50
+SD|1H Supply|29205.00|far 29215.50
+HEAT|PDH|29215.25|buy-side
+SW|1H swing|29180.50
+TRAP|Trapped buyers|29198.00|potential box 29191.50
+PIV|15m pivot|29120.00
+KEY|16:00 close|29088.50
+SD|15m Demand|29059.75|far 29051.00
+TRAP|Trapped sellers|29056.50|confirmed box 29060.25
+KEY|Asia close|29061.25
+PIV|15m pivot|29002.25
+KEY|PDL|28990.75
+HEAT|swing pool|28985.00|sell-side
+SD|1H Demand|28940.25|far 28928.00
+EQ|EQL|28936.50
+ATR|Asia|62.25 / 95.50  65%
+DAY|180.00 / 310.50  58%
+DELTA|Asia|+1,240
+MKT|Balanced
+#VP MNQ1! 2026-09-11 21:40 ET px 29085.25
+PS|prev session New York VAH|29142.50
+PS|prev session New York POC|29101.75
+PS|prev session New York VAL|29048.00
+PD|prior day VAH|29160.25
+PD|prior day POC|29102.00
+PD|prior day VAL|29020.50
+PW|prior week VAH|29290.00
+PW|prior week POC|29150.75
+PW|prior week VAL|28960.25
+PM|prior month VAH|29400.00
+PM|prior month POC|28880.50
+PM|prior month VAL|28420.75
+DEV|developing Asia VAH|29110.00
+DEV|developing Asia POC|29078.25
+DEV|developing Asia VAL|29052.50
+NPOC|naked POC D|29338.00|D
+NPOC|naked POC W|28880.50|W
+REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (x) => x.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const num = (s) => { const v = parseFloat(String(s).replace(/,/g, "")); return isNaN(v) ? null : v; };
+
+  // ---- parse ----------------------------------------------------------------
+  function parse(text) {
+    const d = { levels: [], px: null, ticker: "", stamp: "", atr: null, day: null, delta: null, mkt: null, reg: null, hasSD: false, hasVP: false, unknown: [] };
+    text.split(/\r?\n/).forEach((raw) => {
+      const line = raw.trim();
+      if (!line) return;
+      let m = line.match(/^#(SD|VP)\s+(\S+)\s+(\S+\s+\S+)\s+ET\s+px\s+([\d.,]+)/);
+      if (m) { d[m[1] === "SD" ? "hasSD" : "hasVP"] = true; d.ticker = m[2]; d.stamp = m[3]; d.px = num(m[4]); return; }
+      const p = line.split("|").map((s) => s.trim());
+      const fam = p[0];
+      if (fam === "ATR") { d.atr = parseRange(p.slice(1).join(" ")); return; }
+      if (fam === "DAY") { d.day = parseRange(p.slice(1).join(" ")); return; }
+      if (fam === "DELTA") { d.delta = { sess: p[1] || "", v: num(p[2] || "") }; return; }
+      if (fam === "MKT") { d.mkt = p[1] || null; return; }
+      if (fam === "REG") { d.reg = { name: p[1] || "", sess: p[2] || "", open: p[3] || "", now: p[4] || "", mins: p[5] || "" }; return; }
+      const px = num(p[2]);
+      if (["KEY", "SD", "SW", "PIV", "TRAP", "HEAT", "EQ", "PS", "PD", "PW", "PM", "DEV", "NPOC"].includes(fam) && px !== null) {
+        d.levels.push({ fam, name: p[1], px, extra: p[3] || "" });
+      } else {
+        d.unknown.push(line);
+      }
+    });
+    return d;
+  }
+  function parseRange(s) {
+    const m = s.match(/([\d.,]+)\s*\/\s*([\d.,]+)\s+(\d+)%/);
+    const sess = s.split(" ")[0];
+    if (m) return { sess, used: num(m[1]), avg: num(m[2]), pct: parseInt(m[3], 10) };
+    const u = s.match(/([\d.,]+)/);
+    return { sess, used: u ? num(u[1]) : null, avg: null, pct: null };
+  }
+
+  // ---- frameworks + zones ---------------------------------------------------
+  const FW = { PS: "prev session VA", DEV: "developing VA", PD: "prior day VA", PW: "prior week VA", PM: "prior month VA", NPOC: "naked POC", SD: "S&D pivot", SW: "swing line", PIV: "body pivot", KEY: "key level", TRAP: "trapped box", HEAT: "heat pool", EQ: "EQH/EQL" };
+  const fwKey = (l) => (l.fam === "SW" || l.fam === "PIV") ? "PIV" : (l.fam === "PS" || l.fam === "DEV") ? "PS" : l.fam;
+
+  function buildZones(levels, px) {
+    const band = px * 0.0005;
+    const sorted = levels.slice().sort((a, b) => b.px - a.px);
+    const zones = [];
+    sorted.forEach((l) => {
+      const z = zones[zones.length - 1];
+      if (z && z.lo - l.px <= band && z.hi - l.px <= band * 1.6) { z.items.push(l); z.lo = l.px; }
+      else zones.push({ hi: l.px, lo: l.px, items: [l] });
+    });
+    zones.forEach((z) => {
+      z.fws = [...new Set(z.items.map(fwKey))];
+      z.score = z.fws.length;
+      z.mid = (z.hi + z.lo) / 2;
+      z.role = roleOf(z, px);
+    });
+    return zones;
+  }
+  function roleOf(z, px) {
+    const names = z.items.map((i) => i.name + " " + i.extra).join(" ").toLowerCase();
+    const above = z.mid > px;
+    if (/poc/.test(names)) return "magnet";
+    if (/trapped buyers/.test(names)) return above ? "trapped supply" : "reclaim trigger";
+    if (/trapped sellers/.test(names)) return above ? "reclaim trigger" : "trapped demand";
+    if (/supply/.test(names)) return "supply";
+    if (/demand/.test(names)) return "demand";
+    if (/vah|val/.test(names)) return "value edge";
+    if (/heat|pool|pdh|pdl|pwh|pwl|eqh|eql/.test(names)) return above ? "stops above" : "stops below";
+    return above ? "resistance" : "support";
+  }
+  const starTxt = (n) => "★".repeat(Math.min(n, 5));
+  const zoneLabel = (z) => z.hi === z.lo ? fmt(z.hi) : fmt(z.lo) + "–" + fmt(z.hi);
+  const zoneWhat = (z) => z.items.map((i) => i.name).join(" + ");
+
+  // ---- regime -----------------------------------------------------------------
+  function vaState(px, levels, fam) {
+    const vah = levels.find((l) => l.fam === fam && /VAH/.test(l.name));
+    const val = levels.find((l) => l.fam === fam && /VAL/.test(l.name));
+    if (!vah || !val) return null;
+    return { st: px > vah.px ? 1 : px < val.px ? -1 : 0, vah: vah.px, val: val.px, poc: (levels.find((l) => l.fam === fam && /POC/.test(l.name)) || {}).px };
+  }
+  const word = (st) => st > 0 ? "above" : st < 0 ? "below" : "inside";
+
+  function regime(d) {
+    const px = d.px;
+    const ps = vaState(px, d.levels, "PS"), pd = vaState(px, d.levels, "PD"), pw = vaState(px, d.levels, "PW"), pm = vaState(px, d.levels, "PM");
+    const mkt = (d.mkt || "").toLowerCase();
+    const trending = /trending/.test(mkt);
+    const up = /up/.test(mkt);
+    const stretched = d.atr && d.atr.pct !== null && d.atr.pct >= 100;
+    const deltaSign = d.delta && d.delta.v !== null ? Math.sign(d.delta.v) : 0;
+    let name = "Waiting for value", lean = 0, note = "";
+    const base = ps || pd;
+    if (base) {
+      if (base.st === 0) {
+        if (trending) { name = "Push inside value"; lean = up ? 1 : -1; note = "Trending inside the prior value: it needs to get through " + (up ? "VAH " + fmt(base.vah) : "VAL " + fmt(base.val)) + " and hold, or it rotates back."; }
+        else { name = "Balanced rotation"; lean = 0; note = "Inside the prior value with no trend. Edges get faded toward the POC" + (base.poc ? " " + fmt(base.poc) : "") + "."; }
+      } else {
+        const side = base.st > 0 ? "above" : "below";
+        const agrees = trending && ((base.st > 0 && up) || (base.st < 0 && !up));
+        if (agrees && deltaSign === base.st) { name = "Acceptance " + side + " value"; lean = base.st; note = "Price left value, the Market line agrees and the delta is on the same side. Pullbacks to " + (base.st > 0 ? "VAH " + fmt(base.vah) : "VAL " + fmt(base.val)) + " are the continuation spots."; }
+        else if (trending && !agrees) { name = "Rotation back toward value"; lean = -base.st; note = "Price is " + side + " value but the session is trending the other way. Watch a re-entry through " + (base.st > 0 ? "VAH " + fmt(base.vah) : "VAL " + fmt(base.val)) + "."; }
+        else { name = "Testing " + side + " value"; lean = 0; note = "Outside value without a trend. Hold = expansion, failure back inside = fade to the POC" + (base.poc ? " " + fmt(base.poc) : "") + "."; }
+      }
+    }
+    if (stretched) note += " The session has used " + d.atr.pct + "% of its average range, so the room is gone: extremes are for fading, not chasing.";
+    return { name, lean, note, ps, pd, pw, pm, trending, up, stretched, deltaSign };
+  }
+
+  // ---- scenarios --------------------------------------------------------------
+  function scenarios(d, R, zones) {
+    const px = d.px;
+    const above = zones.filter((z) => z.lo > px);
+    const below = zones.filter((z) => z.hi < px).reverse();
+    const nearAbove = above.slice().reverse();
+    const bestAbove = above.filter((z) => z.score >= 2).slice(-1)[0] || nearAbove[0];
+    const bestBelow = below.filter((z) => z.score >= 2)[0] || below[0];
+    const A = (z) => z ? zoneLabel(z) + " (" + zoneWhat(z) + ")" : "the next level";
+    const out = [];
+    const longTargets = above.slice().reverse().slice(0, 3).map(A).join(", then ");
+    const shortTargets = below.slice(0, 3).map(A).join(", then ");
+    const inval = (z, up) => z ? (up ? "a 5m close below " + fmt(z.lo) : "a 5m close above " + fmt(z.hi)) : "a 5m close through the trigger level";
+    const longScn = { dir: "long", title: "Long from " + (bestBelow ? zoneLabel(bestBelow) : "the nearest support"),
+      trigger: "Price comes down into " + A(bestBelow) + " and a 5m candle closes back above it. A trapped sellers box confirming there is the cleanest version.",
+      targets: longTargets || "the top of the prior value", inval: inval(bestBelow, true) + ", or a heat sweep under it that does not come back.",
+      fits: R.lean > 0 ? "Rides the regime." : R.lean < 0 ? "Counter-regime: needs extra confirmation." : "Neutral regime: take it only at an A zone." };
+    const shortScn = { dir: "short", title: "Short from " + (bestAbove ? zoneLabel(bestAbove) : "the nearest resistance"),
+      trigger: "Price runs up into " + A(bestAbove) + " and a 5m candle closes back below it. A trapped buyers box confirming there is the cleanest version.",
+      targets: shortTargets || "the bottom of the prior value", inval: inval(bestAbove, false) + ", or a heat sweep over it that does not come back.",
+      fits: R.lean < 0 ? "Rides the regime." : R.lean > 0 ? "Counter-regime: needs extra confirmation." : "Neutral regime: take it only at an A zone." };
+    if (R.lean < 0) out.push(shortScn, longScn); else out.push(longScn, shortScn);
+    const top = nearAbove[0], bot = below[0];
+    out.push({ dir: "chop", title: "Chop between " + (bot ? fmt(bot.hi) : "support") + " and " + (top ? fmt(top.lo) : "resistance"),
+      trigger: "Neither side gets a 5m close through its zone. The session stays " + (R.ps ? "inside " + fmt(R.ps.val) + " – " + fmt(R.ps.vah) : "in the bracket") + ".",
+      targets: "Fade the bracket edges toward " + (R.ps && R.ps.poc ? "the POC " + fmt(R.ps.poc) : "the middle") + ". Small targets, no chasing.",
+      inval: "A 5m close outside the bracket with the delta on that side.",
+      fits: R.lean === 0 ? "This is the base case in a balanced regime." : "Stand down if the bracket holds past the first hour." });
+    return out;
+  }
+
+  // ---- render -------------------------------------------------------------------
+  let plainText = "";
+  function render(d) {
+    const out = $("out");
+    if (d.px === null || d.levels.length === 0) { out.innerHTML = '<section><h2>Nothing to read</h2><p class="hint">Paste the sheet printed by the S&amp;D script and the one printed by the volume profile script. Each starts with a line beginning with #SD or #VP.</p></section>'; return; }
+    const R = regime(d);
+    const zones = buildZones(d.levels, d.px);
+    const above = zones.filter((z) => z.lo > d.px);
+    const below = zones.filter((z) => z.hi < d.px);
+    const at = zones.filter((z) => z.lo <= d.px && z.hi >= d.px);
+    const aAbove = above.filter((z) => z.score >= 3).slice(-1)[0];
+    const aBelow = below.filter((z) => z.score >= 3)[0];
+    const scn = scenarios(d, R, zones);
+    const lines = [];
+    const push = (s) => lines.push(s);
+
+    // The read
+    const sessName = (d.atr && d.atr.sess) || (d.reg && d.reg.sess) || "Session";
+    const readParts = [];
+    readParts.push(`${d.ticker || "NQ"} at <b>${fmt(d.px)}</b>, ${d.stamp} ET, ${sessName} session.`);
+    if (R.ps) readParts.push(`Price is <b>${word(R.ps.st)}</b> the previous session's value (${fmt(R.ps.val)} – ${fmt(R.ps.vah)})` + (R.pd ? `, ${word(R.pd.st)} the prior day's, ${word(R.pw ? R.pw.st : 0)} the prior week's.` : "."));
+    readParts.push(`Regime: <b>${R.name}</b>. ${R.note}`);
+    if (d.mkt) readParts.push(`The Market line reads <b>${d.mkt}</b>` + (d.delta && d.delta.v !== null ? `, delta ${d.delta.v > 0 ? "+" : ""}${d.delta.v.toLocaleString("en-US")}` : "") + (d.atr && d.atr.pct !== null ? `, ${d.atr.pct}% of the average ${d.atr.sess} range used.` : "."));
+    const hinge = aAbove && aBelow ? `The session hinges on ${zoneLabel(aBelow)} underneath and ${zoneLabel(aAbove)} overhead.` : aAbove ? `The level that matters is ${zoneLabel(aAbove)} overhead.` : aBelow ? `The level that matters is ${zoneLabel(aBelow)} underneath.` : `No three-framework zone nearby: context only, smaller size.`;
+    readParts.push(hinge);
+    push("SESSION GAMEPLAN " + (d.ticker || "") + " " + d.stamp + " ET px " + fmt(d.px));
+    push(""); push("THE READ"); readParts.forEach((p) => push(p.replace(/<[^>]+>/g, "")));
+
+    const chips = [
+      { k: "Regime", v: R.name, c: R.lean > 0 ? "good" : R.lean < 0 ? "bad" : "bronze" },
+      { k: "vs prev session value", v: R.ps ? word(R.ps.st) : "n/a", c: R.ps ? (R.ps.st > 0 ? "good" : R.ps.st < 0 ? "bad" : "bronze") : "" },
+      { k: "Market line", v: d.mkt || "n/a", c: /up/i.test(d.mkt || "") ? "good" : /down/i.test(d.mkt || "") ? "bad" : "bronze" },
+      { k: (d.atr && d.atr.sess ? d.atr.sess : "Session") + " range used", v: d.atr && d.atr.pct !== null ? d.atr.pct + "%" : "n/a", c: d.atr && d.atr.pct !== null ? (d.atr.pct < 70 ? "good" : d.atr.pct > 100 ? "bad" : "bronze") : "" },
+      { k: "Delta", v: d.delta && d.delta.v !== null ? (d.delta.v > 0 ? "+" : "") + d.delta.v.toLocaleString("en-US") : "n/a", c: d.delta && d.delta.v !== null ? (d.delta.v > 0 ? "good" : d.delta.v < 0 ? "bad" : "bronze") : "" }
+    ];
+
+    // Ladder
+    const rows = [];
+    const rowOf = (z) => `<tr class="${z.score >= 3 ? "a" : ""}"><td class="px">${zoneLabel(z)}</td><td class="stars">${starTxt(z.score)}</td><td>${zoneWhat(z)}</td><td class="role">${z.role}</td></tr>`;
+    rows.push('<tr class="head"><td colspan="4">Above · resistance</td></tr>');
+    above.forEach((z) => rows.push(rowOf(z)));
+    at.forEach((z) => rows.push(rowOf(z).replace('<tr class="', '<tr class="a ')));
+    rows.push(`<tr class="price"><td class="px">${fmt(d.px)}</td><td class="stars"></td><td>price</td><td class="role"></td></tr>`);
+    rows.push('<tr class="head"><td colspan="4">Below · support</td></tr>');
+    below.forEach((z) => rows.push(rowOf(z)));
+    push(""); push("LEVEL LADDER (★ per framework stacked, 3+ = A zone)");
+    push("ABOVE"); above.forEach((z) => push(`${zoneLabel(z).padEnd(22)} ${starTxt(z.score).padEnd(6)} ${zoneWhat(z)} — ${z.role}`));
+    push(`—— price ${fmt(d.px)} ——`);
+    push("BELOW"); below.forEach((z) => push(`${zoneLabel(z).padEnd(22)} ${starTxt(z.score).padEnd(6)} ${zoneWhat(z)} — ${z.role}`));
+
+    // Playbook
+    const scnHtml = scn.map((s) => `<div class="scn ${s.dir}"><div class="t">${s.title}<span class="tag">${s.dir === "chop" ? "chop" : s.fits.replace(/\..*$/, "")}</span></div><p><b>If</b> ${s.trigger}</p><p><b>Then</b> targets ${s.targets}.</p><p><b>Wrong if</b> ${s.inval}</p><p class="hint">${s.fits}</p></div>`).join("");
+    push(""); push("IF / THEN");
+    scn.forEach((s) => { push(`${s.title.toUpperCase()} [${s.fits}]`); push(`  IF ${s.trigger}`); push(`  THEN targets ${s.targets}.`); push(`  WRONG IF ${s.inval}`); });
+
+    // Watch for
+    const watch = [];
+    const h = parseInt((d.stamp.split(" ")[1] || "0").split(":")[0], 10);
+    if (h >= 18 || h < 3) watch.push("Asia tape: thin, sweep-and-revert. The Asia range gets broken by London 93 to 95 percent of the time and revisited 96 to 97 percent, so its edges are levels, and the first London break is usually a sweep.");
+    if (h >= 23 || h < 4) watch.push("Handoff window, 23:30 to 03:30 ET: the only clock edge in the overnight, with a mild long bias into the European open. Read trapped sellers boxes more seriously than trapped buyers here.");
+    if (h >= 3 && h < 9) watch.push("London tape: the first break of the Asia range is usually a sweep that comes back inside. Wait for the 5m close beyond the range edge before treating it as a trend, and expect the 08:30 ET data window to reset the picture.");
+    if (h >= 9 && h < 12) watch.push("New York open: the first 30 minutes set the tone, and a strong open drive tends to carry into the last half hour. Tiny overnight gaps fill about 78 percent of the time, large ones only 8 percent, so size the gap before fading it.");
+    if (h >= 11 && h < 14) watch.push("Lunch: 11:00 to 13:00 ET runs flat to negative on average. Rotation between value edges, small targets, and breakouts here have the lowest follow-through of the day.");
+    if (h >= 14 && h < 17) watch.push("Into the close: the last 30 minutes usually continue the day's direction as hedging flows push the same way, and 15:15 to 15:45 is the busiest window. Do not fade a trend day here.");
+    if (R.stretched) watch.push(`Range stretched: ${d.atr.pct}% of the average ${d.atr.sess} range used. Fade extremes at a level, do not chase breakouts.`);
+    if (d.day && d.day.pct !== null && d.day.pct >= 100) watch.push(`The day has used ${d.day.pct}% of its daily ATR. New extremes are low-odds.`);
+    const traps = d.levels.filter((l) => l.fam === "TRAP");
+    traps.forEach((t) => watch.push(`${t.name} ${fmt(t.px)} ${/potential/.test(t.extra) ? "is still potential, wait for the failed breakout to close" : "is confirmed: a 5m close through " + fmt(t.px) + " releases it"}.`));
+    const npocs = d.levels.filter((l) => l.fam === "NPOC");
+    if (npocs.length) watch.push("Naked POCs: " + npocs.map((n) => fmt(n.px) + " (" + n.extra + ")").join(", ") + ". Unfinished business, magnets on a push.");
+    if (R.deltaSign !== 0 && R.trending && ((R.up && R.deltaSign < 0) || (!R.up && R.deltaSign > 0))) watch.push("Delta disagrees with the trend direction. Treat the trend as unconfirmed.");
+    watch.push("Sheet time " + d.stamp + " ET. If price has moved far from these levels, print a fresh sheet before trusting the ladder.");
+    if (d.unknown.length) watch.push("Lines I could not read: " + d.unknown.join(" · "));
+    const one = aAbove && aBelow ? `The one thing: which way price escapes the ${zoneLabel(aBelow)} to ${zoneLabel(aAbove)} box, on a 5m close with the delta behind it.` : aBelow ? `The one thing: does ${zoneLabel(aBelow)} hold on a 5m close.` : aAbove ? `The one thing: does ${zoneLabel(aAbove)} hold on a 5m close.` : "The one thing: no A zone nearby. Wait for price to reach one before doing anything.";
+    push(""); push("WATCH FOR"); watch.forEach((w) => push("- " + w)); push(one);
+    plainText = lines.join("\n");
+
+    out.innerHTML = `
+      <section><h2>The read</h2>
+        <div class="regime">${chips.map((c) => `<div class="chip ${c.c}"><div class="k">${c.k}</div><div class="v">${c.v}</div></div>`).join("")}</div>
+        <div class="read">${readParts.map((p) => `<p>${p}</p>`).join("")}</div>
+      </section>
+      <section><h2>Level ladder</h2><div class="ladder"><table>${rows.join("")}</table></div><p class="hint">Stars count the frameworks stacked inside a band of 0.05% of price (about ${fmt(d.px * 0.0005)} points). Highlighted rows are A zones: three or more frameworks. Those are the only places to look for a bounce.</p></section>
+      <section><h2>If / then</h2><div class="play">${scnHtml}</div></section>
+      <section><h2>Watch for</h2><ul>${watch.map((w) => `<li>${w}</li>`).join("")}</ul><div class="one">${one}</div></section>`;
+  }
+
+  function build() {
+    const text = $("in").value;
+    try { localStorage.setItem("gameplan.last", text); } catch (e) {}
+    const d = parse(text);
+    render(d);
+    $("status").textContent = d.levels.length ? `${d.levels.length} levels read` + (d.hasSD && d.hasVP ? ", both sheets" : d.hasSD ? ", S&D sheet only" : d.hasVP ? ", VP sheet only" : "") : "";
+  }
+  $("build").addEventListener("click", build);
+  $("sample").addEventListener("click", () => { $("in").value = SAMPLE; build(); $("status").textContent += " · example data"; });
+  $("copy").addEventListener("click", async () => {
+    if (!plainText) build();
+    try { await navigator.clipboard.writeText(plainText); $("status").textContent = "Plan copied"; }
+    catch (e) { $("status").textContent = "Copy blocked here: select the text and copy it by hand"; }
+  });
+  // ---- the TradingView feed: the two alerts post their sheets to the
+  // receiver; this page is served with the newest S&D and VP sheets baked
+  // in (FEED). Refresh reloads the page for fresher ones.
+  const FEED_URL = "https://ahgrjejodqjyvlxktubs.supabase.co/rest/v1/sheets?select=kind,text,received_at&kind=in.(SD,VP)&order=received_at.desc&limit=12";
+  const FEED_KEY = "sb_publishable_z_PuIMBIvezfM-QuMqXFzQ_2P4tgHTf";
+  const feedAge = (iso) => { const ms = Date.now() - new Date(String(iso).replace(" ", "T")).getTime(); if (isNaN(ms)) return ""; const m = Math.round(ms / 60000); return m < 60 ? m + " min ago" : Math.round(m / 60) + " h ago"; };
+  async function fetchFeed(auto) {
+    $("status").textContent = "Fetching the latest sheets...";
+    try {
+      const r = await fetch(FEED_URL, { headers: { apikey: FEED_KEY, Authorization: "Bearer " + FEED_KEY }, cache: "no-store" });
+      if (!r.ok) throw new Error("http " + r.status);
+      const rows = await r.json();
+      const sd = rows.find((x) => x.kind === "SD"), vp = rows.find((x) => x.kind === "VP");
+      if (!sd && !vp) { $("status").textContent = "No sheets in the feed yet. They arrive with the first alert after the market opens."; return false; }
+      $("in").value = [sd && sd.text, vp && vp.text].filter(Boolean).join("\n").trim();
+      build();
+      $("status").textContent = "From TradingView" + (sd ? " · S&D " + feedAge(sd.received_at) : "") + (vp ? " · VP " + feedAge(vp.received_at) : "");
+      return true;
+    } catch (e) {
+      $("status").textContent = auto ? "Feed not reachable right now. Showing the last sheet on this device." : "Feed not reachable (" + e.message + "). Try again in a moment.";
+      return false;
+    }
+  }
+  $("fetch").addEventListener("click", () => fetchFeed(false));
+  let last = "";
+  try { last = localStorage.getItem("gameplan.last") || ""; } catch (e) {}
+  if (last.trim()) { $("in").value = last; build(); }
+  else { $("in").value = SAMPLE; build(); $("status").textContent += " · example data"; }
+  fetchFeed(true);
+})();
+</script>
+</body>
+</html>
