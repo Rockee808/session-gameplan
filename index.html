@@ -59,7 +59,10 @@
   .chip .v { font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.2; margin-top: 2px; }
   .chip.good .v { color: var(--good); } .chip.bad .v { color: var(--bad); } .chip.bronze .v { color: var(--bronze); }
   .ladder { font-family: var(--font-mono); font-size: 13.5px; overflow-x: auto; }
-  .ladder table { border-collapse: collapse; width: 100%; min-width: 520px; font-variant-numeric: tabular-nums; }
+  .ladder table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+  .ladder td.what { word-break: break-word; }
+  @media (max-width: 520px) { .ladder td.role { display: none; } .ladder td.px { width: 120px; } .ladder { font-size: 12.5px; } }
+  .ladder-tools { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
   .ladder td { padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
   .ladder td.px { white-space: nowrap; width: 150px; }
   .ladder td.stars { white-space: nowrap; width: 60px; color: var(--bronze); letter-spacing: 0.05em; }
@@ -287,6 +290,8 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
 
   // ---- render -------------------------------------------------------------------
   let plainText = "";
+  let showAll = false;
+  const NEAR = 7;
   function render(d) {
     const out = $("out");
     if (d.px === null || d.levels.length === 0) { out.innerHTML = '<section><h2>Nothing to read</h2><p class="hint">Paste the sheet printed by the S&amp;D script and the one printed by the volume profile script. Each starts with a line beginning with #SD or #VP.</p></section>'; return; }
@@ -323,13 +328,16 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
 
     // Ladder
     const rows = [];
-    const rowOf = (z) => `<tr class="${z.score >= 3 ? "a" : ""}"><td class="px">${zoneLabel(z)}</td><td class="stars">${starTxt(z.score)}</td><td>${zoneWhat(z)}</td><td class="role">${z.role}</td></tr>`;
-    rows.push('<tr class="head"><td colspan="4">Above · resistance</td></tr>');
-    above.forEach((z) => rows.push(rowOf(z)));
+    const rowOf = (z) => `<tr class="${z.score >= 3 ? "a" : ""}"><td class="px">${zoneLabel(z)}</td><td class="stars">${starTxt(z.score)}</td><td class="what">${zoneWhat(z)}</td><td class="role">${z.role}</td></tr>`;
+    const aboveShown = showAll ? above : above.slice(-NEAR);
+    const belowShown = showAll ? below : below.slice(0, NEAR);
+    const hiddenN = (above.length - aboveShown.length) + (below.length - belowShown.length);
+    rows.push(`<tr class="head"><td colspan="4">Above · resistance${aboveShown.length < above.length ? " · nearest " + aboveShown.length + " of " + above.length : ""}</td></tr>`);
+    aboveShown.forEach((z) => rows.push(rowOf(z)));
     at.forEach((z) => rows.push(rowOf(z).replace('<tr class="', '<tr class="a ')));
-    rows.push(`<tr class="price"><td class="px">${fmt(d.px)}</td><td class="stars"></td><td>price</td><td class="role"></td></tr>`);
-    rows.push('<tr class="head"><td colspan="4">Below · support</td></tr>');
-    below.forEach((z) => rows.push(rowOf(z)));
+    rows.push(`<tr class="price"><td class="px">${fmt(d.px)}</td><td class="stars"></td><td class="what">price</td><td class="role"></td></tr>`);
+    rows.push(`<tr class="head"><td colspan="4">Below · support${belowShown.length < below.length ? " · nearest " + belowShown.length + " of " + below.length : ""}</td></tr>`);
+    belowShown.forEach((z) => rows.push(rowOf(z)));
     push(""); push("LEVEL LADDER (★ per framework stacked, 3+ = A zone)");
     push("ABOVE"); above.forEach((z) => push(`${zoneLabel(z).padEnd(22)} ${starTxt(z.score).padEnd(6)} ${zoneWhat(z)} — ${z.role}`));
     push(`—— price ${fmt(d.px)} ——`);
@@ -367,9 +375,11 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
         <div class="regime">${chips.map((c) => `<div class="chip ${c.c}"><div class="k">${c.k}</div><div class="v">${c.v}</div></div>`).join("")}</div>
         <div class="read">${readParts.map((p) => `<p>${p}</p>`).join("")}</div>
       </section>
-      <section><h2>Level ladder</h2><div class="ladder"><table>${rows.join("")}</table></div><p class="hint">Stars count the frameworks stacked inside a band of 0.05% of price (about ${fmt(d.px * 0.0005)} points). Highlighted rows are A zones: three or more frameworks. Those are the only places to look for a bounce.</p></section>
+      <section><h2>Level ladder</h2><div class="ladder"><table>${rows.join("")}</table></div><div class="ladder-tools">${hiddenN > 0 || showAll ? `<button id="more" class="quiet">${showAll ? "Show nearest only" : "Show all " + zones.length + " levels"}</button>` : ""}</div><p class="hint">Stars count the frameworks stacked inside a band of 0.05% of price (about ${fmt(d.px * 0.0005)} points). Highlighted rows are A zones: three or more frameworks. Those are the only places to look for a bounce.</p></section>
       <section><h2>If / then</h2><div class="play">${scnHtml}</div></section>
       <section><h2>Watch for</h2><ul>${watch.map((w) => `<li>${w}</li>`).join("")}</ul><div class="one">${one}</div></section>`;
+    const more = document.getElementById("more");
+    if (more) more.addEventListener("click", () => { showAll = !showAll; render(d); });
   }
 
   function build() {
