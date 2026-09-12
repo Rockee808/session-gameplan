@@ -4,113 +4,184 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Session Gameplan</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root {
-    --ground: #f3efe6;
-    --panel: #fbf9f4;
-    --line: #d9d2c3;
-    --ink: #1c1a16;
-    --muted: #6b655a;
-    --bronze: #a8631f;
-    --bronze-soft: #e9d6bd;
-    --good: #1e8f7c;
-    --bad: #c8463f;
-    --good-soft: #d6ede6;
-    --bad-soft: #f4d9d6;
-    --price: #2f5d9c;
-    --focus: #2f5d9c;
-    --font-display: "Barlow Semi Condensed", "Arial Narrow", sans-serif;
+    --ground: #0b1210;
+    --panel: #121c17;
+    --panel-2: #172520;
+    --turf: #163a24;
+    --turf-2: #1c4a2e;
+    --chalk: #efe9d8;
+    --chalk-soft: rgba(239, 233, 216, 0.28);
+    --ink: #eef0ea;
+    --muted: #8aa093;
+    --amber: #f0b429;
+    --amber-soft: rgba(240, 180, 41, 0.16);
+    --bull: #2fc9a7;
+    --bull-soft: rgba(47, 201, 167, 0.14);
+    --bear: #f05a4a;
+    --bear-soft: rgba(240, 90, 74, 0.14);
+    --line: #223328;
+    --font-display: "Oswald", "Arial Narrow", Impact, sans-serif;
     --font-body: "Source Sans 3", "Segoe UI", sans-serif;
-    --font-mono: "IBM Plex Mono", "Consolas", monospace;
+    --font-mono: "IBM Plex Mono", Consolas, monospace;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ground: #0f1216; --panel: #171b21; --line: #2a303a; --ink: #e8e6e0; --muted: #8c94a2;
-      --bronze: #d59650; --bronze-soft: #3a2c1c; --good: #35b79e; --bad: #ef6b63;
-      --good-soft: #163a34; --bad-soft: #43231f; --price: #7fb0f0; --focus: #7fb0f0;
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --ground: #e6ecdf; --panel: #f7f9f3; --panel-2: #eef3e8; --turf: #2f7a4b; --turf-2: #3c8f5b;
+      --chalk: #ffffff; --chalk-soft: rgba(255, 255, 255, 0.45); --ink: #12231a; --muted: #5b7263;
+      --amber: #b8791a; --amber-soft: rgba(184, 121, 26, 0.14); --bull: #158a6e; --bull-soft: rgba(21, 138, 110, 0.12);
+      --bear: #c9402f; --bear-soft: rgba(201, 64, 47, 0.12); --line: #cfd9cc;
     }
   }
-  :root[data-theme="dark"] {
-    --ground: #0f1216; --panel: #171b21; --line: #2a303a; --ink: #e8e6e0; --muted: #8c94a2;
-    --bronze: #d59650; --bronze-soft: #3a2c1c; --good: #35b79e; --bad: #ef6b63;
-    --good-soft: #163a34; --bad-soft: #43231f; --price: #7fb0f0; --focus: #7fb0f0;
+  :root[data-theme="light"] {
+    --ground: #e6ecdf; --panel: #f7f9f3; --panel-2: #eef3e8; --turf: #2f7a4b; --turf-2: #3c8f5b;
+    --chalk: #ffffff; --chalk-soft: rgba(255, 255, 255, 0.45); --ink: #12231a; --muted: #5b7263;
+    --amber: #b8791a; --amber-soft: rgba(184, 121, 26, 0.14); --bull: #158a6e; --bull-soft: rgba(21, 138, 110, 0.12);
+    --bear: #c9402f; --bear-soft: rgba(201, 64, 47, 0.12); --line: #cfd9cc;
   }
   * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.45; }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 20px 16px 60px; }
-  header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-  h1 { font-family: var(--font-display); font-weight: 700; font-size: 30px; letter-spacing: 0.01em; margin: 0; text-wrap: balance; }
-  .eyebrow { font-family: var(--font-display); font-weight: 600; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); }
-  textarea { width: 100%; min-height: 150px; padding: 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font-family: var(--font-mono); font-size: 13px; line-height: 1.4; resize: vertical; }
-  textarea:focus, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
-  button { font-family: var(--font-display); font-weight: 600; font-size: 15px; letter-spacing: 0.04em; text-transform: uppercase; padding: 10px 18px; border-radius: 6px; border: 1px solid var(--bronze); background: var(--bronze); color: #fff; cursor: pointer; }
-  button.quiet { background: transparent; color: var(--bronze); }
-  .hint { color: var(--muted); font-size: 14px; }
-  .status { color: var(--muted); font-size: 14px; margin-left: auto; }
-  section { margin-top: 26px; }
-  h2 { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); margin: 0 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
-  .read { font-size: 17px; max-width: 65ch; }
+  a { color: inherit; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 14px 70px; }
+
+  /* scoreboard */
+  .board { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 3px solid var(--amber); box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+  .board-in { max-width: 900px; margin: 0 auto; padding: 8px 14px; display: grid; grid-template-columns: auto 1fr auto; gap: 10px 16px; align-items: center; }
+  .team { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1; }
+  .team small { display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.16em; color: var(--muted); margin-top: 3px; }
+  .score { text-align: center; }
+  .score .px { font-family: var(--font-display); font-weight: 600; font-size: 30px; letter-spacing: 0.02em; line-height: 1; color: var(--amber); font-variant-numeric: tabular-nums; }
+  .score .sub { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 3px; }
+  .clock { text-align: right; font-family: var(--font-display); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .clock b { display: block; color: var(--ink); font-size: 15px; font-weight: 500; }
+  .board button { margin-top: 6px; }
+  button { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; padding: 7px 12px; border-radius: 4px; border: 1px solid var(--amber); background: var(--amber); color: #1a1408; cursor: pointer; }
+  button.quiet { background: transparent; color: var(--amber); }
+  button:focus-visible, textarea:focus, summary:focus-visible { outline: 2px solid var(--bull); outline-offset: 2px; }
+  @media (max-width: 560px) { .board-in { grid-template-columns: 1fr auto; } .score { grid-column: 1 / -1; text-align: left; } .score .px { font-size: 26px; } }
+
+  /* sections */
+  section { margin-top: 28px; }
+  .sec-h { display: flex; align-items: baseline; gap: 12px; margin-bottom: 10px; }
+  .sec-h h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter-spacing: 0.08em; text-transform: uppercase; margin: 0; }
+  .sec-h .num { font-family: var(--font-display); font-size: 12px; letter-spacing: 0.18em; color: var(--amber); }
+  .sec-h .tip { font-size: 13px; color: var(--muted); }
+
+  /* regime chips */
+  .chips { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+  .chip { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; border-top: 3px solid var(--line); }
+  .chip .k { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+  .chip .v { font-family: var(--font-display); font-weight: 600; font-size: 19px; line-height: 1.15; margin-top: 2px; }
+  .chip.bull { border-top-color: var(--bull); } .chip.bull .v { color: var(--bull); }
+  .chip.bear { border-top-color: var(--bear); } .chip.bear .v { color: var(--bear); }
+  .chip.amber { border-top-color: var(--amber); } .chip.amber .v { color: var(--amber); }
+  .read { margin-top: 12px; max-width: 70ch; font-size: 16.5px; }
   .read p { margin: 0 0 8px; }
-  .regime { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-bottom: 12px; }
-  .chip { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
-  .chip .k { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-  .chip .v { font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.2; margin-top: 2px; }
-  .chip.good .v { color: var(--good); } .chip.bad .v { color: var(--bad); } .chip.bronze .v { color: var(--bronze); }
-  .ladder { font-family: var(--font-mono); font-size: 13.5px; overflow-x: auto; }
-  .ladder table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
-  .ladder td.what { word-break: break-word; }
-  @media (max-width: 520px) { .ladder td.role { display: none; } .ladder td.px { width: 120px; } .ladder { font-size: 12.5px; } }
-  .ladder-tools { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
-  .ladder td { padding: 5px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  .ladder td.px { white-space: nowrap; width: 150px; }
-  .ladder td.stars { white-space: nowrap; width: 60px; color: var(--bronze); letter-spacing: 0.05em; }
-  .ladder td.role { color: var(--muted); white-space: nowrap; width: 110px; }
-  .ladder tr.a td { background: var(--bronze-soft); }
-  .ladder tr.price td { background: var(--panel); color: var(--price); font-weight: 500; border-top: 2px solid var(--price); border-bottom: 2px solid var(--price); }
-  .ladder tr.head td { color: var(--muted); font-family: var(--font-display); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; border-bottom: none; padding-top: 10px; }
-  .play { display: grid; gap: 10px; }
-  .scn { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; border-left: 4px solid var(--bronze); }
-  .scn.long { border-left-color: var(--good); } .scn.short { border-left-color: var(--bad); }
-  .scn .t { font-family: var(--font-display); font-weight: 600; font-size: 17px; margin-bottom: 4px; }
-  .scn p { margin: 4px 0; font-size: 15px; }
-  .scn .tag { display: inline-block; font-family: var(--font-display); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; background: var(--bronze-soft); color: var(--bronze); margin-left: 6px; vertical-align: middle; }
-  ul { margin: 6px 0 0; padding-left: 20px; }
-  li { margin: 4px 0; }
-  .one { font-size: 17px; font-weight: 600; margin-top: 12px; padding: 10px 12px; border-left: 4px solid var(--bronze); background: var(--panel); }
-  .mono { font-family: var(--font-mono); }
-  .sample { font-size: 13px; color: var(--muted); }
+
+  /* the field */
+  .field { background: repeating-linear-gradient(180deg, var(--turf) 0 44px, var(--turf-2) 44px 88px); border: 2px solid var(--chalk-soft); border-radius: 6px; overflow: hidden; }
+  .endzone { background: var(--panel); color: var(--chalk); font-family: var(--font-display); font-weight: 700; font-size: 18px; letter-spacing: 0.3em; text-transform: uppercase; text-align: center; padding: 10px; }
+  .endzone.bear { background: linear-gradient(90deg, var(--bear-soft), var(--panel), var(--bear-soft)); border-bottom: 2px solid var(--bear); }
+  .endzone.bull { background: linear-gradient(90deg, var(--bull-soft), var(--panel), var(--bull-soft)); border-top: 2px solid var(--bull); }
+  .yard { display: grid; grid-template-columns: 96px 1fr auto; gap: 8px; align-items: center; padding: 7px 10px; border-top: 1px solid var(--chalk-soft); color: var(--chalk); font-family: var(--font-mono); font-size: 13px; }
+  .yard .px { font-weight: 500; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .yard .what { font-family: var(--font-body); font-size: 14px; line-height: 1.3; }
+  .yard .role { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--chalk-soft); color: rgba(239,233,216,0.7); white-space: nowrap; }
+  .yard.a { background: rgba(240, 180, 41, 0.16); border-top: 2px solid var(--amber); }
+  .yard.a .px { color: var(--amber); }
+  .yard .stars { color: var(--amber); letter-spacing: 0.05em; font-size: 12px; }
+  .ball { display: grid; grid-template-columns: 96px 1fr; gap: 8px; align-items: center; padding: 9px 10px; background: var(--panel); border-top: 2px solid var(--chalk); border-bottom: 2px solid var(--chalk); font-family: var(--font-display); font-size: 16px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .ball .px { color: var(--amber); font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .ball .ico { display: inline-block; width: 22px; height: 14px; background: #b5652a; border-radius: 50%; border: 2px solid #f4e2c6; margin-right: 8px; vertical-align: middle; position: relative; }
+  .ball .ico::after { content: ""; position: absolute; left: 6px; right: 6px; top: 4px; height: 2px; background: #f4e2c6; }
+  details.more { background: var(--panel-2); }
+  details.more summary { cursor: pointer; list-style: none; padding: 8px 10px; font-family: var(--font-display); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--amber); }
+  details.more summary::-webkit-details-marker { display: none; }
+  details.more summary::before { content: "+ "; }
+  details.more[open] summary::before { content: "− "; }
+  @media (max-width: 520px) { .yard { grid-template-columns: 84px 1fr; } .yard .role { display: none; } .yard .what { font-size: 13px; } }
+
+  /* playbook */
+  .plays { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .play { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px; border-top: 5px solid var(--line); }
+  .play.bull { border-top-color: var(--bull); } .play.bear { border-top-color: var(--bear); } .play.chop { border-top-color: var(--amber); }
+  .play .tag { font-family: var(--font-display); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+  .play.bull .tag { color: var(--bull); } .play.bear .tag { color: var(--bear); } .play.chop .tag { color: var(--amber); }
+  .play .big { font-family: var(--font-display); font-weight: 600; font-size: 24px; line-height: 1.1; margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
+  .play .step { display: grid; grid-template-columns: 74px 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--line); font-size: 14.5px; }
+  .play .step b { font-family: var(--font-display); font-weight: 500; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+  .play .fits { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .play .mono { font-family: var(--font-mono); font-size: 13px; }
+
+  /* huddle */
+  .huddle { background: var(--panel); border-left: 5px solid var(--amber); padding: 16px 18px; border-radius: 0 6px 6px 0; }
+  .huddle .q { font-family: var(--font-display); font-weight: 500; font-size: 22px; line-height: 1.3; text-wrap: balance; }
+  .huddle .who { margin-top: 6px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--amber); }
+
+  /* news */
+  .news { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 640px) { .news { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; }
+  .card h3 { font-family: var(--font-display); font-weight: 600; font-size: 14px; letter-spacing: 0.16em; text-transform: uppercase; margin: 0 0 8px; color: var(--muted); }
+  .ev { display: grid; grid-template-columns: 92px 1fr; gap: 8px; padding: 6px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .ev .t { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+  .ev .t b { display: block; color: var(--ink); font-weight: 500; }
+  .ev .i { font-family: var(--font-display); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 1px 6px; border-radius: 3px; margin-right: 6px; vertical-align: middle; }
+  .ev .i.high { background: var(--bear-soft); color: var(--bear); } .ev .i.medium { background: var(--amber-soft); color: var(--amber); }
+  .ev .fp { color: var(--muted); font-size: 12.5px; }
+  .hl { padding: 6px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  .hl a { text-decoration: none; } .hl a:hover { text-decoration: underline; }
+  .hl .t { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); }
+  .empty { color: var(--muted); font-size: 14px; }
+
+  /* watch */
+  ul.watch { margin: 0; padding-left: 20px; } ul.watch li { margin: 5px 0; }
+  .one { margin-top: 12px; padding: 12px 14px; background: var(--amber-soft); border-left: 5px solid var(--amber); font-family: var(--font-display); font-size: 18px; font-weight: 500; line-height: 1.3; }
+
+  /* paste */
+  details.paste { margin-top: 30px; border-top: 1px solid var(--line); padding-top: 10px; }
+  details.paste summary { cursor: pointer; font-family: var(--font-display); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  textarea { width: 100%; min-height: 140px; margin-top: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 4px; background: var(--panel); color: var(--ink); font-family: var(--font-mono); font-size: 12.5px; line-height: 1.4; resize: vertical; }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  .status { color: var(--muted); font-size: 13px; }
   @media (prefers-reduced-motion: no-preference) { button { transition: filter 0.15s; } button:hover { filter: brightness(1.08); } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div>
-      <div class="eyebrow">MNQ / NQ · Asia · London · New York</div>
-      <h1>Session Gameplan</h1>
-    </div>
-    <div class="hint">The two TradingView alerts feed this page by themselves, every half hour and at each session start. Paste sheets by hand to build a plan from other levels. Nothing is invented: every line is built from the prices in the sheets.</div>
-  </header>
-
-  <textarea id="in" spellcheck="false" aria-label="Level sheets"></textarea>
-  <div class="row">
-    <button id="build">Build gameplan</button>
-    <button id="fetch" class="quiet">Refresh feed</button>
-    <button id="copy" class="quiet">Copy plan as text</button>
-    <button id="sample" class="quiet">Load example</button>
-    <span class="status" id="status"></span>
+<div class="board">
+  <div class="board-in">
+    <div class="team" id="team">MNQ<small>Session Gameplan</small></div>
+    <div class="score"><div class="px" id="bPx">—</div><div class="sub" id="bSub">waiting for the feed</div></div>
+    <div class="clock"><span id="bAge">sheet age</span><b id="bRegime">—</b><button id="fetch" class="quiet">Refresh</button></div>
   </div>
+</div>
 
+<div class="wrap">
   <div id="out"></div>
+
+  <details class="paste">
+    <summary>Paste sheets by hand</summary>
+    <textarea id="in" spellcheck="false" aria-label="Level sheets"></textarea>
+    <div class="row">
+      <button id="build">Build gameplan</button>
+      <button id="copy" class="quiet">Copy plan as text</button>
+      <button id="sample" class="quiet">Load example</button>
+      <span class="status" id="status"></span>
+    </div>
+  </details>
 </div>
 
 <script>
 (function () {
+  const FEED_URL = "https://ahgrjejodqjyvlxktubs.supabase.co/rest/v1/sheets?select=kind,text,received_at&kind=in.(SD,VP)&order=received_at.desc&limit=12";
+  const FEED_KEY = "sb_publishable_z_PuIMBIvezfM-QuMqXFzQ_2P4tgHTf";
+  const NEWS_URL = "https://ahgrjejodqjyvlxktubs.supabase.co/functions/v1/news";
+  const NEAR = 6;
   const SAMPLE = `#SD MNQ1! 2026-09-11 21:40 ET px 29085.25
 KEY|PWH|29310.00
-KEY|PMH|29288.50
 SD|1H Supply|29205.00|far 29215.50
 HEAT|PDH|29215.25|buy-side
 SW|1H swing|29180.50
@@ -124,7 +195,6 @@ PIV|15m pivot|29002.25
 KEY|PDL|28990.75
 HEAT|swing pool|28985.00|sell-side
 SD|1H Demand|28940.25|far 28928.00
-EQ|EQL|28936.50
 ATR|Asia|62.25 / 95.50  65%
 DAY|180.00 / 310.50  58%
 DELTA|Asia|+1,240
@@ -139,19 +209,34 @@ PD|prior day VAL|29020.50
 PW|prior week VAH|29290.00
 PW|prior week POC|29150.75
 PW|prior week VAL|28960.25
-PM|prior month VAH|29400.00
-PM|prior month POC|28880.50
-PM|prior month VAL|28420.75
 DEV|developing Asia VAH|29110.00
 DEV|developing Asia POC|29078.25
 DEV|developing Asia VAL|29052.50
 NPOC|naked POC D|29338.00|D
-NPOC|naked POC W|28880.50|W
 REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
+
+  // Short sayings from professional traders on the mind game. One per day.
+  const QUOTES = [
+    ["The goal of a successful trader is to make the best trades. Money is secondary.", "Alexander Elder"],
+    ["Losers average losers.", "Paul Tudor Jones"],
+    ["Don't focus on making money; focus on protecting what you have.", "Paul Tudor Jones"],
+    ["The elements of good trading are: cutting losses, cutting losses, and cutting losses.", "Ed Seykota"],
+    ["Everybody gets what they want out of the market.", "Ed Seykota"],
+    ["There is a time to go long, a time to go short, and a time to go fishing.", "Jesse Livermore"],
+    ["Amateurs think about how much money they can make. Professionals think about how much they could lose.", "Jack Schwager"],
+    ["Trade what you see, not what you think.", "Linda Raschke"],
+    ["The best trades are the ones you don't take.", "Trading floor saying"],
+    ["Confidence comes from preparation, not from the last trade.", "Brett Steenbarger"],
+    ["You have to take your losses so you can take your profits.", "Marty Schwartz"],
+    ["Risk comes from not knowing what you are doing.", "Warren Buffett"],
+    ["The market is never wrong; opinions often are.", "Jesse Livermore"],
+    ["Plan the trade, trade the plan.", "Trading floor saying"]
+  ];
 
   const $ = (id) => document.getElementById(id);
   const fmt = (x) => x.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const num = (s) => { const v = parseFloat(String(s).replace(/,/g, "")); return isNaN(v) ? null : v; };
+  const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
   // ---- parse ----------------------------------------------------------------
   function parse(text) {
@@ -159,7 +244,7 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
     text.split(/\r?\n/).forEach((raw) => {
       const line = raw.trim();
       if (!line) return;
-      let m = line.match(/^#(SD|VP)\s+(\S+)\s+(\S+\s+\S+)\s+ET\s+px\s+([\d.,]+)/);
+      const m = line.match(/^#(SD|VP)\s+(\S+)\s+(\S+\s+\S+)\s+ET\s+px\s+([\d.,]+)/);
       if (m) { d[m[1] === "SD" ? "hasSD" : "hasVP"] = true; d.ticker = m[2]; d.stamp = m[3]; d.px = num(m[4]); return; }
       const p = line.split("|").map((s) => s.trim());
       const fam = p[0];
@@ -169,11 +254,8 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
       if (fam === "MKT") { d.mkt = p[1] || null; return; }
       if (fam === "REG") { d.reg = { name: p[1] || "", sess: p[2] || "", open: p[3] || "", now: p[4] || "", mins: p[5] || "" }; return; }
       const px = num(p[2]);
-      if (["KEY", "SD", "SW", "PIV", "TRAP", "HEAT", "EQ", "PS", "PD", "PW", "PM", "DEV", "NPOC"].includes(fam) && px !== null) {
-        d.levels.push({ fam, name: p[1], px, extra: p[3] || "" });
-      } else {
-        d.unknown.push(line);
-      }
+      if (["KEY", "SD", "SW", "PIV", "TRAP", "HEAT", "EQ", "PS", "PD", "PW", "PM", "DEV", "NPOC"].includes(fam) && px !== null) d.levels.push({ fam, name: p[1], px, extra: p[3] || "" });
+      else d.unknown.push(line);
     });
     return d;
   }
@@ -185,10 +267,9 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
     return { sess, used: u ? num(u[1]) : null, avg: null, pct: null };
   }
 
-  // ---- frameworks + zones ---------------------------------------------------
-  const FW = { PS: "prev session VA", DEV: "developing VA", PD: "prior day VA", PW: "prior week VA", PM: "prior month VA", NPOC: "naked POC", SD: "S&D pivot", SW: "swing line", PIV: "body pivot", KEY: "key level", TRAP: "trapped box", HEAT: "heat pool", EQ: "EQH/EQL" };
+  // ---- zones --------------------------------------------------------------------
   const fwKey = (l) => (l.fam === "SW" || l.fam === "PIV") ? "PIV" : (l.fam === "PS" || l.fam === "DEV") ? "PS" : l.fam;
-
+  const SHORT = { PS: "value", DEV: "dev value", PD: "day value", PW: "week value", PM: "month value", NPOC: "naked POC", SD: "S&D", SW: "swing", PIV: "pivot", KEY: "key", TRAP: "trap", HEAT: "heat", EQ: "EQ" };
   function buildZones(levels, px) {
     const band = px * 0.0005;
     const sorted = levels.slice().sort((a, b) => b.px - a.px);
@@ -203,6 +284,9 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
       z.score = z.fws.length;
       z.mid = (z.hi + z.lo) / 2;
       z.role = roleOf(z, px);
+      // dedupe names for the label
+      const seen = new Set();
+      z.names = z.items.map((i) => i.name).filter((n) => { if (seen.has(n)) return false; seen.add(n); return true; });
     });
     return zones;
   }
@@ -218,11 +302,12 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
     if (/heat|pool|pdh|pdl|pwh|pwl|eqh|eql/.test(names)) return above ? "stops above" : "stops below";
     return above ? "resistance" : "support";
   }
-  const starTxt = (n) => "★".repeat(Math.min(n, 5));
-  const zoneLabel = (z) => z.hi === z.lo ? fmt(z.hi) : fmt(z.lo) + "–" + fmt(z.hi);
-  const zoneWhat = (z) => z.items.map((i) => i.name).join(" + ");
+  const stars = (n) => "★".repeat(Math.min(n, 5));
+  const zl = (z) => z.hi === z.lo ? fmt(z.hi) : fmt(z.lo) + "–" + fmt(z.hi);
+  const zw = (z) => z.names.join(" + ");
+  const zs = (z) => zl(z) + " (" + zw(z) + ")";
 
-  // ---- regime -----------------------------------------------------------------
+  // ---- regime -------------------------------------------------------------------
   function vaState(px, levels, fam) {
     const vah = levels.find((l) => l.fam === fam && /VAH/.test(l.name));
     const val = levels.find((l) => l.fam === fam && /VAL/.test(l.name));
@@ -230,7 +315,6 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
     return { st: px > vah.px ? 1 : px < val.px ? -1 : 0, vah: vah.px, val: val.px, poc: (levels.find((l) => l.fam === fam && /POC/.test(l.name)) || {}).px };
   }
   const word = (st) => st > 0 ? "above" : st < 0 ? "below" : "inside";
-
   function regime(d) {
     const px = d.px;
     const ps = vaState(px, d.levels, "PS"), pd = vaState(px, d.levels, "PD"), pw = vaState(px, d.levels, "PW"), pm = vaState(px, d.levels, "PM");
@@ -243,7 +327,7 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
     const base = ps || pd;
     if (base) {
       if (base.st === 0) {
-        if (trending) { name = "Push inside value"; lean = up ? 1 : -1; note = "Trending inside the prior value: it needs to get through " + (up ? "VAH " + fmt(base.vah) : "VAL " + fmt(base.val)) + " and hold, or it rotates back."; }
+        if (trending) { name = "Push inside value"; lean = up ? 1 : -1; note = "Trending inside the prior value. It needs to get through " + (up ? "VAH " + fmt(base.vah) : "VAL " + fmt(base.val)) + " and hold, or it rotates back."; }
         else { name = "Balanced rotation"; lean = 0; note = "Inside the prior value with no trend. Edges get faded toward the POC" + (base.poc ? " " + fmt(base.poc) : "") + "."; }
       } else {
         const side = base.st > 0 ? "above" : "below";
@@ -257,129 +341,178 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
     return { name, lean, note, ps, pd, pw, pm, trending, up, stretched, deltaSign };
   }
 
-  // ---- scenarios --------------------------------------------------------------
-  function scenarios(d, R, zones) {
+  // ---- plays: from where the ball is, then beyond -------------------------------
+  function plays(d, R, zones) {
     const px = d.px;
-    const above = zones.filter((z) => z.lo > px);
-    const below = zones.filter((z) => z.hi < px);
-    const nearAbove = above.slice().reverse();
-    const bestAbove = above.filter((z) => z.score >= 2).slice(-1)[0] || nearAbove[0];
-    const bestBelow = below.filter((z) => z.score >= 2)[0] || below[0];
-    const A = (z) => z ? zoneLabel(z) + " (" + zoneWhat(z) + ")" : "the next level";
-    const out = [];
-    const longTargets = above.slice().reverse().slice(0, 3).map(A).join(", then ");
-    const shortTargets = below.slice(0, 3).map(A).join(", then ");
-    const inval = (z, up) => z ? (up ? "a 5m close below " + fmt(z.lo) : "a 5m close above " + fmt(z.hi)) : "a 5m close through the trigger level";
-    const longScn = { dir: "long", title: "Long from " + (bestBelow ? zoneLabel(bestBelow) : "the nearest support"),
-      trigger: "Price comes down into " + A(bestBelow) + " and a 5m candle closes back above it. A trapped sellers box confirming there is the cleanest version.",
-      targets: longTargets || "the top of the prior value", inval: inval(bestBelow, true) + ", or a heat sweep under it that does not come back.",
-      fits: R.lean > 0 ? "Rides the regime." : R.lean < 0 ? "Counter-regime: needs extra confirmation." : "Neutral regime: take it only at an A zone." };
-    const shortScn = { dir: "short", title: "Short from " + (bestAbove ? zoneLabel(bestAbove) : "the nearest resistance"),
-      trigger: "Price runs up into " + A(bestAbove) + " and a 5m candle closes back below it. A trapped buyers box confirming there is the cleanest version.",
-      targets: shortTargets || "the bottom of the prior value", inval: inval(bestAbove, false) + ", or a heat sweep over it that does not come back.",
-      fits: R.lean < 0 ? "Rides the regime." : R.lean > 0 ? "Counter-regime: needs extra confirmation." : "Neutral regime: take it only at an A zone." };
-    if (R.lean < 0) out.push(shortScn, longScn); else out.push(longScn, shortScn);
-    const top = nearAbove[0], bot = below[0];
-    out.push({ dir: "chop", title: "Chop between " + (bot ? fmt(bot.hi) : "support") + " and " + (top ? fmt(top.lo) : "resistance"),
-      trigger: "Neither side gets a 5m close through its zone. The session stays " + (R.ps ? "inside " + fmt(R.ps.val) + " – " + fmt(R.ps.vah) : "in the bracket") + ".",
-      targets: "Fade the bracket edges toward " + (R.ps && R.ps.poc ? "the POC " + fmt(R.ps.poc) : "the middle") + ". Small targets, no chasing.",
-      inval: "A 5m close outside the bracket with the delta on that side.",
-      fits: R.lean === 0 ? "This is the base case in a balanced regime." : "Stand down if the bracket holds past the first hour." });
-    return out;
+    const above = zones.filter((z) => z.lo > px).slice().reverse();   // nearest first
+    const below = zones.filter((z) => z.hi < px);                      // nearest first
+    const firstA = (arr) => arr.findIndex((z) => z.score >= 3);
+    const listOf = (arr) => arr.map(zs).join(", then ");
+    // Offense: hold the nearest support, drive through the resistances, then past the first A zone.
+    const oHold = below[0], oA = firstA(above);
+    const oDrive = oA >= 0 ? above.slice(0, oA + 1) : above.slice(0, 2);
+    const oBeyond = oA >= 0 ? above.slice(oA + 1, oA + 4) : above.slice(2, 5);
+    // Defense: fail under the nearest resistance, drive down through the supports, then past the first A zone.
+    const dHold = above[0], dA = firstA(below);
+    const dDrive = dA >= 0 ? below.slice(0, dA + 1) : below.slice(0, 2);
+    const dBeyond = dA >= 0 ? below.slice(dA + 1, dA + 4) : below.slice(2, 5);
+    const fits = (dir) => R.lean === dir ? "Rides the regime." : R.lean === -dir ? "Counter-regime: needs extra confirmation." : "Neutral regime: take it only at an A zone.";
+    return {
+      bull: { hold: oHold, drive: oDrive, beyond: oBeyond, fits: fits(1),
+        trigger: oHold ? "Ball at " + fmt(px) + ". The first down is a 5m close that holds above " + zs(oHold) + ", a trapped sellers box confirming there being the cleanest look." : "Ball at " + fmt(px) + " with no support under it on the sheet.",
+        inval: oHold ? "A 5m close below " + fmt(oHold.lo) + ", or a sweep under it that does not come back." : "A 5m close through the nearest level.",
+        driveTxt: oDrive.length ? listOf(oDrive) : "the first resistance", beyondTxt: oBeyond.length ? listOf(oBeyond) : "open field, no drawn levels" },
+      bear: { hold: dHold, drive: dDrive, beyond: dBeyond, fits: fits(-1),
+        trigger: dHold ? "Ball at " + fmt(px) + ". The first down is a 5m close that fails under " + zs(dHold) + ", a trapped buyers box confirming there being the cleanest look." : "Ball at " + fmt(px) + " with no resistance over it on the sheet.",
+        inval: dHold ? "A 5m close above " + fmt(dHold.hi) + ", or a sweep over it that does not come back." : "A 5m close through the nearest level.",
+        driveTxt: dDrive.length ? listOf(dDrive) : "the first support", beyondTxt: dBeyond.length ? listOf(dBeyond) : "open field, no drawn levels" },
+      chop: { top: above[0], bot: below[0], fits: R.lean === 0 ? "The base case in a balanced regime." : "Stand down if the bracket holds past the first hour.",
+        txt: "Neither side gets a 5m close through its zone. Fade " + (above[0] ? fmt(above[0].lo) : "resistance") + " and " + (below[0] ? fmt(below[0].hi) : "support") + " toward " + (R.ps && R.ps.poc ? "the POC " + fmt(R.ps.poc) : "the middle") + ". Small targets, no chasing." }
+    };
   }
 
-  // ---- render -------------------------------------------------------------------
+  // ---- news -------------------------------------------------------------------------
+  let newsData = null;
+  const etFmt = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "short", hour: "numeric", minute: "2-digit" });
+  const etDay = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
+  function newsHtml() {
+    if (!newsData) return '<div class="news"><div class="card"><h3>Game clock · economic calendar</h3><p class="empty">Loading the week\'s calendar...</p></div><div class="card"><h3>Wire · headlines</h3><p class="empty">Loading headlines...</p></div></div>';
+    const now = Date.now();
+    const cal = (newsData.calendar || []).map((e) => ({ ...e, ts: new Date(e.date).getTime() })).filter((e) => !isNaN(e.ts)).sort((a, b) => a.ts - b.ts);
+    const upcoming = cal.filter((e) => e.ts >= now - 3600000).slice(0, 8);
+    const list = upcoming.length ? upcoming : cal.slice(-5);
+    const calRows = list.map((e) => {
+      const mins = Math.round((e.ts - now) / 60000);
+      const when = mins > 0 ? (mins < 60 ? "in " + mins + " min" : mins < 2880 ? "in " + Math.round(mins / 60) + " h" : "in " + Math.round(mins / 1440) + " d") : "done";
+      const fp = (e.forecast ? "f " + e.forecast : "") + (e.previous ? (e.forecast ? " · " : "") + "p " + e.previous : "");
+      return `<div class="ev"><div class="t"><b>${etFmt.format(new Date(e.ts))}</b>${etDay.format(new Date(e.ts))} · ${when}</div><div><span class="i ${e.impact.toLowerCase()}">${e.impact}</span>${esc(e.title)}${fp ? ` <span class="fp">${esc(fp)}</span>` : ""}</div></div>`;
+    }).join("");
+    const calNote = upcoming.length ? "" : '<p class="empty">Nothing left on this week\'s USD calendar. Next week\'s list is published Sunday.</p>';
+    const hl = (newsData.headlines || []).slice(0, 8).map((h) => `<div class="hl"><a href="${esc(h.link)}" target="_blank" rel="noopener">${esc(h.title)}</a><div class="t">${esc(h.at || "")}</div></div>`).join("");
+    return `<div class="news"><div class="card"><h3>Game clock · USD calendar, ET</h3>${calRows || ""}${calNote}</div><div class="card"><h3>Wire · ${esc(newsData.source || "headlines")}</h3>${hl || '<p class="empty">No headlines right now.</p>'}</div></div>`;
+  }
+  async function fetchNews() {
+    try { const r = await fetch(NEWS_URL, { cache: "no-store" }); if (r.ok) { newsData = await r.json(); const el = $("newsBox"); if (el) el.innerHTML = newsHtml(); } }
+    catch (e) { const el = $("newsBox"); if (el) el.innerHTML = '<div class="card"><h3>Game clock</h3><p class="empty">News feed not reachable right now.</p></div>'; }
+  }
+
+  // ---- render -------------------------------------------------------------------------
   let plainText = "";
-  let showAll = false;
-  const NEAR = 7;
+  let lastD = null;
+  const yard = (z) => `<div class="yard${z.score >= 3 ? " a" : ""}"><div class="px">${zl(z)}<div class="stars">${stars(z.score)}</div></div><div class="what">${esc(zw(z))}</div><div class="role">${z.role}</div></div>`;
   function render(d) {
+    lastD = d;
     const out = $("out");
-    if (d.px === null || d.levels.length === 0) { out.innerHTML = '<section><h2>Nothing to read</h2><p class="hint">Paste the sheet printed by the S&amp;D script and the one printed by the volume profile script. Each starts with a line beginning with #SD or #VP.</p></section>'; return; }
+    if (d.px === null || d.levels.length === 0) {
+      out.innerHTML = '<section><div class="sec-h"><h2>No sheet yet</h2></div><p class="empty">The page fills itself from the TradingView feed. Nothing has arrived yet, or paste the two sheets by hand below.</p></section>';
+      return;
+    }
     const R = regime(d);
     const zones = buildZones(d.levels, d.px);
-    const above = zones.filter((z) => z.lo > d.px);
-    const below = zones.filter((z) => z.hi < d.px);
+    const above = zones.filter((z) => z.lo > d.px);                 // far -> near
+    const below = zones.filter((z) => z.hi < d.px);                 // near -> far
     const at = zones.filter((z) => z.lo <= d.px && z.hi >= d.px);
+    const nearAbove = above.slice(-NEAR), farAbove = above.slice(0, Math.max(0, above.length - NEAR));
+    const nearBelow = below.slice(0, NEAR), farBelow = below.slice(NEAR);
     const aAbove = above.filter((z) => z.score >= 3).slice(-1)[0];
     const aBelow = below.filter((z) => z.score >= 3)[0];
-    const scn = scenarios(d, R, zones);
-    const lines = [];
-    const push = (s) => lines.push(s);
-
-    // The read
+    const P = plays(d, R, zones);
     const sessName = (d.atr && d.atr.sess) || (d.reg && d.reg.sess) || "Session";
-    const readParts = [];
-    readParts.push(`${d.ticker || "NQ"} at <b>${fmt(d.px)}</b>, ${d.stamp} ET, ${sessName} session.`);
-    if (R.ps) readParts.push(`Price is <b>${word(R.ps.st)}</b> the previous session's value (${fmt(R.ps.val)} – ${fmt(R.ps.vah)})` + (R.pd ? `, ${word(R.pd.st)} the prior day's, ${word(R.pw ? R.pw.st : 0)} the prior week's.` : "."));
-    readParts.push(`Regime: <b>${R.name}</b>. ${R.note}`);
-    if (d.mkt) readParts.push(`The Market line reads <b>${d.mkt}</b>` + (d.delta && d.delta.v !== null ? `, delta ${d.delta.v > 0 ? "+" : ""}${d.delta.v.toLocaleString("en-US")}` : "") + (d.atr && d.atr.pct !== null ? `, ${d.atr.pct}% of the average ${d.atr.sess} range used.` : "."));
-    const hinge = aAbove && aBelow ? `The session hinges on ${zoneLabel(aBelow)} underneath and ${zoneLabel(aAbove)} overhead.` : aAbove ? `The level that matters is ${zoneLabel(aAbove)} overhead.` : aBelow ? `The level that matters is ${zoneLabel(aBelow)} underneath.` : `No three-framework zone nearby: context only, smaller size.`;
-    readParts.push(hinge);
-    push("SESSION GAMEPLAN " + (d.ticker || "") + " " + d.stamp + " ET px " + fmt(d.px));
-    push(""); push("THE READ"); readParts.forEach((p) => push(p.replace(/<[^>]+>/g, "")));
+    const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
+
+    // scoreboard
+    $("team").innerHTML = esc(d.ticker || "NQ") + "<small>" + esc(sessName) + " session · " + esc(d.stamp) + " ET</small>";
+    $("bPx").textContent = fmt(d.px);
+    $("bSub").textContent = (d.mkt ? d.mkt : "") + (d.atr && d.atr.pct !== null ? " · " + d.atr.pct + "% of range" : "") + (d.delta && d.delta.v !== null ? " · Δ " + (d.delta.v > 0 ? "+" : "") + d.delta.v.toLocaleString("en-US") : "");
+    $("bRegime").textContent = R.name;
+    $("bRegime").style.color = R.lean > 0 ? "var(--bull)" : R.lean < 0 ? "var(--bear)" : "var(--amber)";
 
     const chips = [
-      { k: "Regime", v: R.name, c: R.lean > 0 ? "good" : R.lean < 0 ? "bad" : "bronze" },
-      { k: "vs prev session value", v: R.ps ? word(R.ps.st) : "n/a", c: R.ps ? (R.ps.st > 0 ? "good" : R.ps.st < 0 ? "bad" : "bronze") : "" },
-      { k: "Market line", v: d.mkt || "n/a", c: /up/i.test(d.mkt || "") ? "good" : /down/i.test(d.mkt || "") ? "bad" : "bronze" },
-      { k: (d.atr && d.atr.sess ? d.atr.sess : "Session") + " range used", v: d.atr && d.atr.pct !== null ? d.atr.pct + "%" : "n/a", c: d.atr && d.atr.pct !== null ? (d.atr.pct < 70 ? "good" : d.atr.pct > 100 ? "bad" : "bronze") : "" },
-      { k: "Delta", v: d.delta && d.delta.v !== null ? (d.delta.v > 0 ? "+" : "") + d.delta.v.toLocaleString("en-US") : "n/a", c: d.delta && d.delta.v !== null ? (d.delta.v > 0 ? "good" : d.delta.v < 0 ? "bad" : "bronze") : "" }
+      { k: "Regime", v: R.name, c: R.lean > 0 ? "bull" : R.lean < 0 ? "bear" : "amber" },
+      { k: "vs prev session value", v: R.ps ? word(R.ps.st) : "n/a", c: R.ps ? (R.ps.st > 0 ? "bull" : R.ps.st < 0 ? "bear" : "amber") : "" },
+      { k: "VP regime", v: d.reg ? d.reg.name : "n/a", c: "amber" },
+      { k: "Market line", v: d.mkt || "n/a", c: /up/i.test(d.mkt || "") ? "bull" : /down/i.test(d.mkt || "") ? "bear" : "amber" },
+      { k: sessName + " range used", v: d.atr && d.atr.pct !== null ? d.atr.pct + "%" : "n/a", c: d.atr && d.atr.pct !== null ? (d.atr.pct < 70 ? "bull" : d.atr.pct > 100 ? "bear" : "amber") : "" },
+      { k: "Delta", v: d.delta && d.delta.v !== null ? (d.delta.v > 0 ? "+" : "") + d.delta.v.toLocaleString("en-US") : "n/a", c: d.delta && d.delta.v !== null ? (d.delta.v > 0 ? "bull" : d.delta.v < 0 ? "bear" : "amber") : "" }
     ];
+    const readParts = [];
+    if (R.ps) readParts.push(`Price is <b>${word(R.ps.st)}</b> the previous session's value (${fmt(R.ps.val)} – ${fmt(R.ps.vah)})` + (R.pd ? `, ${word(R.pd.st)} the prior day's, ${word(R.pw ? R.pw.st : 0)} the prior week's.` : "."));
+    readParts.push(`<b>${R.name}.</b> ${R.note}`);
+    const hinge = aAbove && aBelow ? `The game is the box between ${zl(aBelow)} and ${zl(aAbove)}.` : aAbove ? `The level that matters is ${zl(aAbove)} overhead.` : aBelow ? `The level that matters is ${zl(aBelow)} underneath.` : `No three-framework zone nearby. Context only, smaller size.`;
+    readParts.push(hinge);
 
-    // Ladder
-    const rows = [];
-    const rowOf = (z) => `<tr class="${z.score >= 3 ? "a" : ""}"><td class="px">${zoneLabel(z)}</td><td class="stars">${starTxt(z.score)}</td><td class="what">${zoneWhat(z)}</td><td class="role">${z.role}</td></tr>`;
-    const aboveShown = showAll ? above : above.slice(-NEAR);
-    const belowShown = showAll ? below : below.slice(0, NEAR);
-    const hiddenN = (above.length - aboveShown.length) + (below.length - belowShown.length);
-    rows.push(`<tr class="head"><td colspan="4">Above · resistance${aboveShown.length < above.length ? " · nearest " + aboveShown.length + " of " + above.length : ""}</td></tr>`);
-    aboveShown.forEach((z) => rows.push(rowOf(z)));
-    at.forEach((z) => rows.push(rowOf(z).replace('<tr class="', '<tr class="a ')));
-    rows.push(`<tr class="price"><td class="px">${fmt(d.px)}</td><td class="stars"></td><td class="what">price</td><td class="role"></td></tr>`);
-    rows.push(`<tr class="head"><td colspan="4">Below · support${belowShown.length < below.length ? " · nearest " + belowShown.length + " of " + below.length : ""}</td></tr>`);
-    belowShown.forEach((z) => rows.push(rowOf(z)));
-    push(""); push("LEVEL LADDER (★ per framework stacked, 3+ = A zone)");
-    push("ABOVE"); above.forEach((z) => push(`${zoneLabel(z).padEnd(22)} ${starTxt(z.score).padEnd(6)} ${zoneWhat(z)} — ${z.role}`));
-    push(`—— price ${fmt(d.px)} ——`);
-    push("BELOW"); below.forEach((z) => push(`${zoneLabel(z).padEnd(22)} ${starTxt(z.score).padEnd(6)} ${zoneWhat(z)} — ${z.role}`));
+    const play = (cls, tag, title, big, steps, fits) => `<div class="play ${cls}"><div class="tag">${tag}</div><div class="big">${big}</div>${steps.map((s) => `<div class="step"><b>${s[0]}</b><div>${s[1]}</div></div>`).join("")}<div class="fits">${fits}</div></div>`;
+    const playsHtml = [
+      play("bull", "Offense · bullish", "", P.bull.hold ? "Hold " + zl(P.bull.hold) : "No support under the ball", [
+        ["1st down", esc(P.bull.trigger)],
+        ["Drive", "Targets " + esc(P.bull.driveTxt) + "."],
+        ["Beyond", "Past the resistance: " + esc(P.bull.beyondTxt) + "."],
+        ["Turnover", esc(P.bull.inval)]], esc(P.bull.fits)),
+      play("bear", "Defense · bearish", "", P.bear.hold ? "Fail " + zl(P.bear.hold) : "No resistance over the ball", [
+        ["1st down", esc(P.bear.trigger)],
+        ["Drive", "Targets " + esc(P.bear.driveTxt) + "."],
+        ["Beyond", "Past the support: " + esc(P.bear.beyondTxt) + "."],
+        ["Turnover", esc(P.bear.inval)]], esc(P.bear.fits)),
+      play("chop", "Field position · chop", "", (P.chop.bot ? fmt(P.chop.bot.hi) : "support") + " ↔ " + (P.chop.top ? fmt(P.chop.top.lo) : "resistance"), [
+        ["Read", esc(P.chop.txt)],
+        ["Turnover", "A 5m close outside the bracket with the delta on that side."]], esc(P.chop.fits))
+    ].join("");
 
-    // Playbook
-    const scnHtml = scn.map((s) => `<div class="scn ${s.dir}"><div class="t">${s.title}<span class="tag">${s.dir === "chop" ? "chop" : s.fits.replace(/\..*$/, "")}</span></div><p><b>If</b> ${s.trigger}</p><p><b>Then</b> targets ${s.targets}.</p><p><b>Wrong if</b> ${s.inval}</p><p class="hint">${s.fits}</p></div>`).join("");
-    push(""); push("IF / THEN");
-    scn.forEach((s) => { push(`${s.title.toUpperCase()} [${s.fits}]`); push(`  IF ${s.trigger}`); push(`  THEN targets ${s.targets}.`); push(`  WRONG IF ${s.inval}`); });
-
-    // Watch for
     const watch = [];
     const h = parseInt((d.stamp.split(" ")[1] || "0").split(":")[0], 10);
     if (h >= 18 || h < 3) watch.push("Asia tape: thin, sweep-and-revert. The Asia range gets broken by London 93 to 95 percent of the time and revisited 96 to 97 percent, so its edges are levels, and the first London break is usually a sweep.");
-    if (h >= 23 || h < 4) watch.push("Handoff window, 23:30 to 03:30 ET: the only clock edge in the overnight, with a mild long bias into the European open. Read trapped sellers boxes more seriously than trapped buyers here.");
-    if (h >= 3 && h < 9) watch.push("London tape: the first break of the Asia range is usually a sweep that comes back inside. Wait for the 5m close beyond the range edge before treating it as a trend, and expect the 08:30 ET data window to reset the picture.");
-    if (h >= 9 && h < 12) watch.push("New York open: the first 30 minutes set the tone, and a strong open drive tends to carry into the last half hour. Tiny overnight gaps fill about 78 percent of the time, large ones only 8 percent, so size the gap before fading it.");
-    if (h >= 11 && h < 14) watch.push("Lunch: 11:00 to 13:00 ET runs flat to negative on average. Rotation between value edges, small targets, and breakouts here have the lowest follow-through of the day.");
+    if (h >= 23 || h < 4) watch.push("Handoff window, 23:30 to 03:30 ET: the one overnight clock edge, with a mild long bias into the European open. Read trapped sellers boxes more seriously than trapped buyers here.");
+    if (h >= 3 && h < 9) watch.push("London tape: the first break of the Asia range is usually a sweep that comes back inside. Wait for the 5m close beyond the range edge, and expect the 08:30 ET data window to reset the picture.");
+    if (h >= 9 && h < 12) watch.push("New York open: the first 30 minutes set the tone, and a strong open drive tends to carry into the last half hour. Tiny overnight gaps fill about 78 percent of the time, large ones only 8 percent.");
+    if (h >= 11 && h < 14) watch.push("Lunch: 11:00 to 13:00 ET runs flat to negative on average. Rotation between value edges, small targets, worst follow-through of the day.");
     if (h >= 14 && h < 17) watch.push("Into the close: the last 30 minutes usually continue the day's direction as hedging flows push the same way, and 15:15 to 15:45 is the busiest window. Do not fade a trend day here.");
     if (R.stretched) watch.push(`Range stretched: ${d.atr.pct}% of the average ${d.atr.sess} range used. Fade extremes at a level, do not chase breakouts.`);
     if (d.day && d.day.pct !== null && d.day.pct >= 100) watch.push(`The day has used ${d.day.pct}% of its daily ATR. New extremes are low-odds.`);
-    const traps = d.levels.filter((l) => l.fam === "TRAP");
-    traps.forEach((t) => watch.push(`${t.name} ${fmt(t.px)} ${/potential/.test(t.extra) ? "is still potential, wait for the failed breakout to close" : "is confirmed: a 5m close through " + fmt(t.px) + " releases it"}.`));
+    d.levels.filter((l) => l.fam === "TRAP").forEach((t) => watch.push(`${t.name} ${fmt(t.px)} ${/potential/.test(t.extra) ? "is still potential: wait for the failed breakout to close" : "is confirmed: a 5m close through " + fmt(t.px) + " releases it"}.`));
     const npocs = d.levels.filter((l) => l.fam === "NPOC");
     if (npocs.length) watch.push("Naked POCs: " + npocs.map((n) => fmt(n.px) + " (" + n.extra + ")").join(", ") + ". Unfinished business, magnets on a push.");
     if (R.deltaSign !== 0 && R.trending && ((R.up && R.deltaSign < 0) || (!R.up && R.deltaSign > 0))) watch.push("Delta disagrees with the trend direction. Treat the trend as unconfirmed.");
-    watch.push("Sheet time " + d.stamp + " ET. If price has moved far from these levels, print a fresh sheet before trusting the ladder.");
+    watch.push("Sheet time " + d.stamp + " ET. If price has moved far from these levels, wait for the next sheet before trusting the field.");
     if (d.unknown.length) watch.push("Lines I could not read: " + d.unknown.join(" · "));
-    const one = aAbove && aBelow ? `The one thing: which way price escapes the ${zoneLabel(aBelow)} to ${zoneLabel(aAbove)} box, on a 5m close with the delta behind it.` : aBelow ? `The one thing: does ${zoneLabel(aBelow)} hold on a 5m close.` : aAbove ? `The one thing: does ${zoneLabel(aAbove)} hold on a 5m close.` : "The one thing: no A zone nearby. Wait for price to reach one before doing anything.";
-    push(""); push("WATCH FOR"); watch.forEach((w) => push("- " + w)); push(one);
-    plainText = lines.join("\n");
+    const one = aAbove && aBelow ? `The one thing: which way the ball leaves the ${zl(aBelow)} to ${zl(aAbove)} box, on a 5m close with the delta behind it.` : aBelow ? `The one thing: does ${zl(aBelow)} hold on a 5m close.` : aAbove ? `The one thing: does ${zl(aAbove)} hold on a 5m close.` : "The one thing: no A zone nearby. Wait for the ball to reach one before doing anything.";
 
     out.innerHTML = `
-      <section><h2>The read</h2>
-        <div class="regime">${chips.map((c) => `<div class="chip ${c.c}"><div class="k">${c.k}</div><div class="v">${c.v}</div></div>`).join("")}</div>
+      <section><div class="sec-h"><span class="num">01</span><h2>Scouting report</h2><span class="tip">regime</span></div>
+        <div class="chips">${chips.map((c) => `<div class="chip ${c.c}"><div class="k">${esc(c.k)}</div><div class="v">${esc(c.v)}</div></div>`).join("")}</div>
         <div class="read">${readParts.map((p) => `<p>${p}</p>`).join("")}</div>
       </section>
-      <section><h2>Level ladder</h2><div class="ladder"><table>${rows.join("")}</table></div><div class="ladder-tools">${hiddenN > 0 || showAll ? `<button id="more" class="quiet">${showAll ? "Show nearest only" : "Show all " + zones.length + " levels"}</button>` : ""}</div><p class="hint">Stars count the frameworks stacked inside a band of 0.05% of price (about ${fmt(d.px * 0.0005)} points). Highlighted rows are A zones: three or more frameworks. Those are the only places to look for a bounce.</p></section>
-      <section><h2>If / then</h2><div class="play">${scnHtml}</div></section>
-      <section><h2>Watch for</h2><ul>${watch.map((w) => `<li>${w}</li>`).join("")}</ul><div class="one">${one}</div></section>`;
-    const more = document.getElementById("more");
-    if (more) more.addEventListener("click", () => { showAll = !showAll; render(d); });
+      <section><div class="sec-h"><span class="num">02</span><h2>The field</h2><span class="tip">★ per framework stacked · 3+ = A zone · nearest ${NEAR} each side</span></div>
+        <div class="field">
+          <div class="endzone bear">Resistance</div>
+          ${farAbove.length ? `<details class="more"><summary>Show more · ${farAbove.length} deep resistance levels</summary>${farAbove.map(yard).join("")}</details>` : ""}
+          ${nearAbove.map(yard).join("")}
+          ${at.map((z) => yard(z).replace('class="yard', 'class="yard a')).join("")}
+          <div class="ball"><div class="px">${fmt(d.px)}</div><div><span class="ico"></span>Ball on ${fmt(d.px)} · ${esc(sessName)}</div></div>
+          ${nearBelow.map(yard).join("")}
+          ${farBelow.length ? `<details class="more"><summary>Show more · ${farBelow.length} deep support levels</summary>${farBelow.map(yard).join("")}</details>` : ""}
+          <div class="endzone bull">Support</div>
+        </div>
+      </section>
+      <section><div class="sec-h"><span class="num">03</span><h2>Playbook</h2><span class="tip">from where the ball is, then beyond</span></div><div class="plays">${playsHtml}</div></section>
+      <section><div class="sec-h"><span class="num">04</span><h2>Huddle</h2></div><div class="huddle"><div class="q">“${esc(q[0])}”</div><div class="who">${esc(q[1])}</div></div></section>
+      <section><div class="sec-h"><span class="num">05</span><h2>Game clock</h2><span class="tip">news that moves the tape</span></div><div id="newsBox">${newsHtml()}</div></section>
+      <section><div class="sec-h"><span class="num">06</span><h2>Watch for</h2></div><ul class="watch">${watch.map((w) => `<li>${esc(w)}</li>`).join("")}</ul><div class="one">${esc(one)}</div></section>`;
+
+    // plain text
+    const L = [];
+    L.push("SESSION GAMEPLAN " + (d.ticker || "") + " " + d.stamp + " ET px " + fmt(d.px));
+    L.push(""); L.push("SCOUTING REPORT"); readParts.forEach((p) => L.push(p.replace(/<[^>]+>/g, "")));
+    L.push(""); L.push("THE FIELD (★ per framework, 3+ = A zone)"); L.push("RESISTANCE");
+    above.forEach((z) => L.push(`${zl(z).padEnd(22)} ${stars(z.score).padEnd(6)} ${zw(z)} — ${z.role}`));
+    L.push(`—— ball ${fmt(d.px)} ——`);
+    below.forEach((z) => L.push(`${zl(z).padEnd(22)} ${stars(z.score).padEnd(6)} ${zw(z)} — ${z.role}`)); L.push("SUPPORT");
+    L.push(""); L.push("PLAYBOOK");
+    L.push("OFFENSE (bullish) [" + P.bull.fits + "]"); L.push("  1st down: " + P.bull.trigger); L.push("  Drive: " + P.bull.driveTxt); L.push("  Beyond resistance: " + P.bull.beyondTxt); L.push("  Turnover: " + P.bull.inval);
+    L.push("DEFENSE (bearish) [" + P.bear.fits + "]"); L.push("  1st down: " + P.bear.trigger); L.push("  Drive: " + P.bear.driveTxt); L.push("  Beyond support: " + P.bear.beyondTxt); L.push("  Turnover: " + P.bear.inval);
+    L.push("FIELD POSITION (chop): " + P.chop.txt);
+    L.push(""); L.push("HUDDLE: \"" + q[0] + "\" — " + q[1]);
+    L.push(""); L.push("WATCH FOR"); watch.forEach((w) => L.push("- " + w)); L.push(one);
+    plainText = L.join("\n");
   }
 
   function build() {
@@ -390,41 +523,37 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
     $("status").textContent = d.levels.length ? `${d.levels.length} levels read` + (d.hasSD && d.hasVP ? ", both sheets" : d.hasSD ? ", S&D sheet only" : d.hasVP ? ", VP sheet only" : "") : "";
   }
   $("build").addEventListener("click", build);
-  $("sample").addEventListener("click", () => { $("in").value = SAMPLE; build(); $("status").textContent += " · example data"; });
+  $("sample").addEventListener("click", () => { $("in").value = SAMPLE; build(); $("status").textContent += " · example data"; $("bAge").textContent = "example sheet"; });
   $("copy").addEventListener("click", async () => {
     if (!plainText) build();
     try { await navigator.clipboard.writeText(plainText); $("status").textContent = "Plan copied"; }
     catch (e) { $("status").textContent = "Copy blocked here: select the text and copy it by hand"; }
   });
-  // ---- the TradingView feed: the two alerts post their sheets to the
-  // receiver; this page is served with the newest S&D and VP sheets baked
-  // in (FEED). Refresh reloads the page for fresher ones.
-  const FEED_URL = "https://ahgrjejodqjyvlxktubs.supabase.co/rest/v1/sheets?select=kind,text,received_at&kind=in.(SD,VP)&order=received_at.desc&limit=12";
-  const FEED_KEY = "sb_publishable_z_PuIMBIvezfM-QuMqXFzQ_2P4tgHTf";
+
+  // ---- the TradingView feed ----------------------------------------------------------------
   const feedAge = (iso) => { const ms = Date.now() - new Date(String(iso).replace(" ", "T")).getTime(); if (isNaN(ms)) return ""; const m = Math.round(ms / 60000); return m < 60 ? m + " min ago" : Math.round(m / 60) + " h ago"; };
   async function fetchFeed(auto) {
-    $("status").textContent = "Fetching the latest sheets...";
+    $("bAge").textContent = "fetching...";
     try {
       const r = await fetch(FEED_URL, { headers: { apikey: FEED_KEY, Authorization: "Bearer " + FEED_KEY }, cache: "no-store" });
       if (!r.ok) throw new Error("http " + r.status);
       const rows = await r.json();
       const sd = rows.find((x) => x.kind === "SD"), vp = rows.find((x) => x.kind === "VP");
-      if (!sd && !vp) { $("status").textContent = "No sheets in the feed yet. They arrive with the first alert after the market opens."; return false; }
+      if (!sd && !vp) { $("bAge").textContent = "no sheets in the feed yet"; return; }
       $("in").value = [sd && sd.text, vp && vp.text].filter(Boolean).join("\n").trim();
       build();
-      $("status").textContent = "From TradingView" + (sd ? " · S&D " + feedAge(sd.received_at) : "") + (vp ? " · VP " + feedAge(vp.received_at) : "");
-      return true;
+      $("bAge").textContent = "sheet " + (sd ? "S&D " + feedAge(sd.received_at) : "") + (vp ? " · VP " + feedAge(vp.received_at) : "");
     } catch (e) {
-      $("status").textContent = auto ? "Feed not reachable right now. Showing the last sheet on this device." : "Feed not reachable (" + e.message + "). Try again in a moment.";
-      return false;
+      $("bAge").textContent = auto ? "feed not reachable · last sheet shown" : "feed not reachable (" + e.message + ")";
     }
   }
-  $("fetch").addEventListener("click", () => fetchFeed(false));
+  $("fetch").addEventListener("click", () => { fetchFeed(false); fetchNews(); });
   let last = "";
   try { last = localStorage.getItem("gameplan.last") || ""; } catch (e) {}
-  if (last.trim()) { $("in").value = last; build(); }
-  else { $("in").value = SAMPLE; build(); $("status").textContent += " · example data"; }
+  if (last.trim()) { $("in").value = last; build(); $("bAge").textContent = "last sheet on this device"; }
+  else { $("in").value = SAMPLE; build(); $("bAge").textContent = "example sheet"; }
   fetchFeed(true);
+  fetchNews();
 })();
 </script>
 </body>
