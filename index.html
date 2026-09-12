@@ -61,7 +61,7 @@
   button { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; padding: 7px 12px; border-radius: 4px; border: 1px solid var(--amber); background: var(--amber); color: #1a1408; cursor: pointer; }
   button.quiet { background: transparent; color: var(--amber); }
   button:focus-visible, textarea:focus, summary:focus-visible { outline: 2px solid var(--bull); outline-offset: 2px; }
-  @media (max-width: 560px) { .board-in { grid-template-columns: 1fr auto; } .score { grid-column: 1 / -1; text-align: left; } .score .px { font-size: 26px; } }
+  @media (max-width: 560px) { .board-in { grid-template-columns: 1fr auto; padding: 6px 12px; gap: 2px 10px; } .score { grid-column: 1; text-align: left; } .score .px { font-size: 24px; } .clock { grid-row: 1 / span 2; grid-column: 2; align-self: center; } .team { font-size: 16px; } .board button { margin-top: 4px; padding: 5px 9px; } }
 
   /* sections */
   section { margin-top: 28px; }
@@ -102,7 +102,7 @@
   details.more summary::-webkit-details-marker { display: none; }
   details.more summary::before { content: "+ "; }
   details.more[open] summary::before { content: "− "; }
-  @media (max-width: 520px) { .yard { grid-template-columns: 84px 1fr; } .yard .role { display: none; } .yard .what { font-size: 13px; } }
+  @media (max-width: 520px) { .yard { grid-template-columns: 118px 1fr; padding: 6px 8px; } .yard .role { display: none; } .yard .what { font-size: 12.5px; } .yard .px { font-size: 12px; white-space: normal; } .ball { grid-template-columns: 118px 1fr; } }
 
   /* playbook */
   .plays { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
