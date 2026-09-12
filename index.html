@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Session Gameplan</title>
+<meta name="app-version" content="2026-09-12.2">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
   :root {
@@ -547,7 +548,24 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
       $("bAge").textContent = auto ? "feed not reachable · last sheet shown" : "feed not reachable (" + e.message + ")";
     }
   }
-  $("fetch").addEventListener("click", () => { fetchFeed(false); fetchNews(); });
+  // Refresh reloads the whole page, so a home-screen copy (which has no
+  // pull-to-refresh) picks up new sheets AND new versions of the page.
+  $("fetch").addEventListener("click", () => { location.reload(); });
+  // Self-check: a home-screen app can hold a stale copy for days. Fetch the
+  // live page once per open and reload if its version moved on.
+  (async () => {
+    try {
+      const meta = document.querySelector('meta[name="app-version"]');
+      const mine = meta ? meta.getAttribute("content") : "";
+      const r = await fetch(location.pathname + "?v=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) return;
+      const m = (await r.text()).match(/name="app-version" content="([^"]+)"/);
+      if (m && m[1] !== mine && !sessionStorage.getItem("reloaded-" + m[1])) {
+        sessionStorage.setItem("reloaded-" + m[1], "1");
+        location.reload();
+      }
+    } catch (e) { /* offline: keep what we have */ }
+  })();
   let last = "";
   try { last = localStorage.getItem("gameplan.last") || ""; } catch (e) {}
   if (last.trim()) { $("in").value = last; build(); $("bAge").textContent = "last sheet on this device"; }
