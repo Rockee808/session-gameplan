@@ -261,7 +261,7 @@ REG|Balanced - opened inside value|Asia|open inside|now inside|140 min`;
   function scenarios(d, R, zones) {
     const px = d.px;
     const above = zones.filter((z) => z.lo > px);
-    const below = zones.filter((z) => z.hi < px).reverse();
+    const below = zones.filter((z) => z.hi < px);
     const nearAbove = above.slice().reverse();
     const bestAbove = above.filter((z) => z.score >= 2).slice(-1)[0] || nearAbove[0];
     const bestBelow = below.filter((z) => z.score >= 2)[0] || below[0];
